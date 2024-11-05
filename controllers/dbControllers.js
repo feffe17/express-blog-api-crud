@@ -1,4 +1,6 @@
-const db = require("../db");
+const fs = require("fs");
+const path = require("path");
+const db = require("../db.json");
 
 exports.index = (req, res) => {
 
@@ -42,5 +44,16 @@ exports.index = (req, res) => {
       };
     
       db.push(newPost);
-      res.status(201).json(newPost);
+      fs.writeFile(
+        path.join(__dirname, "../db.json"),
+        JSON.stringify(db, null, 2),
+        (err) => {
+          if (err) {
+            console.error("Errore durante il salvataggio del file:", err);
+            return res.status(500).json({ message: "Errore interno del server" });
+          }
+          res.status(201).json(newPost);
+        }
+      );
     };
+    
