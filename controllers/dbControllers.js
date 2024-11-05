@@ -57,3 +57,28 @@ exports.index = (req, res) => {
       );
     };
     
+exports.update = (req, res) => {
+  const { slug } = req.params;
+  const { title, content, tags } = req.body;
+
+  const postIndex = db.findIndex(post => post.slug === slug);
+  if (postIndex === -1) {
+    return res.status(404).json({ message: "Post non trovato" });
+  }
+
+  if (title) db[postIndex].title = title;
+  if (content) db[postIndex].content = content;
+  if (tags) db[postIndex].tags = tags;
+
+  fs.writeFile(
+    path.join(__dirname, "../db.json"),
+    JSON.stringify(db, null, 2),
+    (err) => {
+      if (err) {
+        console.error("Errore durante il salvataggio del file:", err);
+        return res.status(500).json({ message: "Errore interno del server" });
+      }
+      res.status(200).json(db[postIndex]);
+    }
+  );
+};

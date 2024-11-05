@@ -8,4 +8,6 @@ router.get("/:slug", postsController.show);
 
 router.post("/", postsController.store);
 
+router.put("/:slug", postsController.update);
+
 module.exports = router;
