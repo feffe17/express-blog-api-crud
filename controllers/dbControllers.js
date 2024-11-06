@@ -82,3 +82,29 @@ exports.update = (req, res) => {
     }
   );
 };
+
+exports.destroy = (req, res) => {
+  const { slug } = req.params;
+
+  const postIndex = db.findIndex(post => post.slug === slug);
+  if (postIndex === -1) {
+    return res.status(404).json({ message: "Post non trovato" });
+  }
+
+  db.splice(postIndex, 1);
+
+  fs.writeFile(
+    path.join(__dirname, "../db.json"),
+    JSON.stringify(db, null, 2),
+    (err) => {
+      if (err) {
+        console.error("Errore durante il salvataggio del file:", err);
+        return res.status(500).json({ message: "Errore interno del server" });
+      }
+      res.status(200).json({
+        message: "Post eliminato correttamente",
+        lista: db
+      });
+    }
+  );
+};
