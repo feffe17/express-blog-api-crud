@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const db = require("../db.json");
+const { error } = require("console");
 
 exports.index = (req, res) => {
 
@@ -50,7 +51,7 @@ exports.index = (req, res) => {
         (err) => {
           if (err) {
             console.error("Errore durante il salvataggio del file:", err);
-            return res.status(500).json({ message: "Errore interno del server" });
+            return next(err);
           }
           res.status(201).json(newPost);
         }
@@ -76,7 +77,7 @@ exports.update = (req, res) => {
     (err) => {
       if (err) {
         console.error("Errore durante il salvataggio del file:", err);
-        return res.status(500).json({ message: "Errore interno del server" });
+        return next(err);
       }
       res.status(200).json(db[postIndex]);
     }
@@ -99,7 +100,7 @@ exports.destroy = (req, res) => {
     (err) => {
       if (err) {
         console.error("Errore durante il salvataggio del file:", err);
-        return res.status(500).json({ message: "Errore interno del server" });
+        return next(err);
       }
       res.status(200).json({
         message: "Post eliminato correttamente",
