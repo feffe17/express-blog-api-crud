@@ -17,6 +17,17 @@ exports.index = (req, res) => {
   });
 };
 
+exports.getPostById = (req, res) => {
+  // console.log("ID ricevuto:", req.params.id);
+  const { id } = req.params;
+  const post = db.find(post => post.id === parseInt(id)); // O usa il tuo database
+  if (post) {
+    res.json(post);
+  } else {
+    res.status(404).json({ message: "Post non trovato" });
+  }
+};
+
 exports.show = (req, res) => {
   const post = db.find(
     (post) => post.title.trim().toLowerCase() === req.params.title.trim().toLowerCase()
